@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- App name part -->
-    <string name="app_short_name">MJLauncher</string>
+    <string name="app_short_name">AstryxLauncher</string>
+
+    <string name="astryx_cursor_studio">Cursor Studio</string>
+    <string name="astryx_performance">Performance Centre</string>
+    <string name="astryx_cursor_scale">Cursor size</string>
+    <string name="astryx_cursor_import">Import cursor PNG</string>
+    <string name="astryx_cursor_reset">Reset cursor</string>
+    <string name="astryx_cursor_note">Choose a transparent PNG to use as your in-game pointer. The cursor is shown when the game releases the mouse.</string>
 
     <!-- Action bar part -->
 
@@ -21,7 +28,7 @@
     <string name="alerttitle_installmod">Select a mod installer</string>
 
     <!-- Error messages -->
-    <string name="error_fatal">MJLauncher has unexpectedly crashed</string>
+    <string name="error_fatal">AstryxLauncher has unexpectedly crashed</string>
     <string name="error_no_version">No version!</string>
     <string name="error_show_more">Show more</string>
     <string name="error_show_less">Show less</string>
