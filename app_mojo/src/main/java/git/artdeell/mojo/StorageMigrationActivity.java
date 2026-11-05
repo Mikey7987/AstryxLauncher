@@ -84,9 +84,9 @@ public class StorageMigrationActivity extends AppCompatActivity {
         String canonicalRoot = root.getCanonicalPath() + File.separator;
         long total = 0;
         int count = 0;
-        try (InputStream raw = getContentResolver().openInputStream(uri);
-             ZipInputStream zip = new ZipInputStream(new BufferedInputStream(raw))) {
-            if (raw == null) throw new IllegalArgumentException("Could not open the selected ZIP");
+        InputStream raw = getContentResolver().openInputStream(uri);
+        if (raw == null) throw new IllegalArgumentException("Could not open the selected ZIP");
+        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(raw))) {
             ZipEntry entry;
             byte[] buffer = new byte[32768];
             while ((entry = zip.getNextEntry()) != null) {
