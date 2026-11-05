@@ -43,6 +43,7 @@
         tools:ignore="UnusedAttribute">
         <activity android:name=".CursorStudioActivity" android:exported="false" />
         <activity android:name=".StorageMigrationActivity" android:exported="false" />
+        <activity android:name=".PerformancePresetActivity" android:exported="false" />
 
         <activity
             android:name=".MissingStorageActivity"
