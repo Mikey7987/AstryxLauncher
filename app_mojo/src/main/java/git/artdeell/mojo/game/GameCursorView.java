@@ -2,6 +2,11 @@ package git.artdeell.mojo.game;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import androidx.preference.PreferenceManager;
+import java.io.InputStream;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -24,6 +29,7 @@ public class GameCursorView extends View implements PlatformCursorImplementor {
     private final Drawable cursorDrawable;
     private boolean noDraw = false;
     private float mouseScale = 1f;
+    private Bitmap importedCursor;
 
     public GameCursorView(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
@@ -42,6 +48,14 @@ public class GameCursorView extends View implements PlatformCursorImplementor {
         cursorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_mouse_pointer);
         assert cursorDrawable != null;
         cursorDrawable.setBounds(0, 0, 36, 54);
+        android.content.SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mouseScale = Math.max(0.25f, Math.min(2f, prefs.getInt("astryx_cursor_scale", 100) / 100f));
+        String uriValue = prefs.getString("astryx_cursor_uri", null);
+        if (uriValue != null) {
+            try (InputStream stream = context.getContentResolver().openInputStream(Uri.parse(uriValue))) {
+                if (stream != null) importedCursor = BitmapFactory.decodeStream(stream);
+            } catch (Exception ignored) { importedCursor = null; }
+        }
     }
 
     @Override
