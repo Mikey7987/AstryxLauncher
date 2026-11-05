@@ -29,7 +29,7 @@ public class GameCursorView extends View implements PlatformCursorImplementor {
     private final Drawable cursorDrawable;
     private boolean noDraw = false;
     private float mouseScale = 1f;
-    private Bitmap importedCursor;
+    private Bitmap importedCursor;\n    private float importedHotX;\n    private float importedHotY;
 
     public GameCursorView(Context context, AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
@@ -50,7 +50,7 @@ public class GameCursorView extends View implements PlatformCursorImplementor {
         cursorDrawable.setBounds(0, 0, 36, 54);
         android.content.SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         mouseScale = Math.max(0.25f, Math.min(2f, prefs.getInt("astryx_cursor_scale", 100) / 100f));
-        String uriValue = prefs.getString("astryx_cursor_uri", null);
+        importedHotX = prefs.getInt("astryx_cursor_hot_x", 0) / 100f;\n        importedHotY = prefs.getInt("astryx_cursor_hot_y", 0) / 100f;\n        String uriValue = prefs.getString("astryx_cursor_uri", null);
         if (uriValue != null) {
             try (InputStream stream = context.getContentResolver().openInputStream(Uri.parse(uriValue))) {
                 if (stream != null) importedCursor = BitmapFactory.decodeStream(stream);
