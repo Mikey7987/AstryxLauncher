@@ -18,6 +18,8 @@ public class CursorStudioActivity extends AppCompatActivity {
     private static final int PICK_CURSOR = 4102;
     private static final String PREF_CURSOR_URI = "astryx_cursor_uri";
     private static final String PREF_CURSOR_SCALE = "astryx_cursor_scale";
+    private static final String PREF_HOT_X = "astryx_cursor_hot_x";
+    private static final String PREF_HOT_Y = "astryx_cursor_hot_y";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +61,16 @@ public class CursorStudioActivity extends AppCompatActivity {
             @Override public void onStopTrackingTouch(SeekBar bar) { }
         });
 
+
+        TextView hotspotTitle = new TextView(this);
+        hotspotTitle.setText("Cursor hotspot position");
+        hotspotTitle.setPadding(0, pad, 0, 0);
+        root.addView(hotspotTitle);
+
+        android.content.SharedPreferences cursorPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        addHotspotSlider(root, "Hotspot X", PREF_HOT_X, cursorPrefs.getInt(PREF_HOT_X, 0));
+        addHotspotSlider(root, "Hotspot Y", PREF_HOT_Y, cursorPrefs.getInt(PREF_HOT_Y, 0));
+
         Button importButton = new Button(this);
         importButton.setText(R.string.astryx_cursor_import);
         root.addView(importButton);
@@ -75,7 +87,8 @@ public class CursorStudioActivity extends AppCompatActivity {
         root.addView(resetButton);
         resetButton.setOnClickListener(v -> {
             PreferenceManager.getDefaultSharedPreferences(this).edit()
-                    .remove(PREF_CURSOR_URI).putInt(PREF_CURSOR_SCALE, 100).apply();
+                    .remove(PREF_CURSOR_URI).putInt(PREF_CURSOR_SCALE, 100)
+                    .putInt(PREF_HOT_X, 0).putInt(PREF_HOT_Y, 0).apply();
             scale.setProgress(100);
             Toast.makeText(this, "Cursor reset. It will apply next time Minecraft starts.", Toast.LENGTH_LONG).show();
         });
