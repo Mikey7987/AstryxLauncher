@@ -19,9 +19,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class StorageMigrationActivity extends AppCompatActivity {
     private static final int PICK_BACKUP = 5101;
+    private static final int CREATE_BACKUP = 5102;
     private static final long MAX_UNPACKED_BYTES = 4L * 1024L * 1024L * 1024L;
 
     @Override
@@ -31,20 +33,35 @@ public class StorageMigrationActivity extends AppCompatActivity {
         root.setOrientation(LinearLayout.VERTICAL);
         int pad = (int) (20 * getResources().getDisplayMetrics().density);
         root.setPadding(pad, pad, pad, pad);
+        root.setBackgroundColor(getResources().getColor(R.color.background_app));
 
         TextView title = new TextView(this);
-        title.setText("Astryx Storage Migration");
+        title.setText("ASTRYX DATA TRANSFER");
+        title.setTextColor(getResources().getColor(R.color.astryx_accent));
         title.setTextSize(23);
+        title.setTypeface(null, 1);
         root.addView(title);
 
         TextView info = new TextView(this);
         info.setPadding(0, pad, 0, pad);
-        info.setText("Import a ZIP backup containing the contents of your previous launcher's game-data folder. Astryx will extract it into its own app storage. This does not access another app's private Android/data folder directly. Keep your original launcher and backup until you verify your worlds, instances, accounts and mods.");
+        info.setText("Export creates a ZIP of Astryx's app-specific game-data folder. Import extracts a compatible ZIP into Astryx storage. Android does not allow Astryx to read another launcher's private app folder directly. Keep your original launcher and backup until you verify your worlds, instances, accounts and mods.");
+        info.setTextColor(getResources().getColor(R.color.secondary_text));
         root.addView(info, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        Button export = new Button(this);
+        export.setText("EXPORT ASTRYX BACKUP");
+        root.addView(export);
+        export.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/zip");
+            intent.putExtra(Intent.EXTRA_TITLE, "astryx-backup.zip");
+            startActivityForResult(intent, CREATE_BACKUP);
+        });
+
         Button pick = new Button(this);
-        pick.setText("Select backup ZIP");
+        pick.setText("IMPORT BACKUP ZIP");
         root.addView(pick);
         pick.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -55,7 +72,7 @@ public class StorageMigrationActivity extends AppCompatActivity {
         });
 
         Button done = new Button(this);
-        done.setText(android.R.string.ok);
+        done.setText("DONE");
         root.addView(done);
         done.setOnClickListener(v -> finish());
         setContentView(root);
@@ -64,20 +81,26 @@ public class StorageMigrationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != PICK_BACKUP || resultCode != RESULT_OK || data == null || data.getData() == null) return;
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
         Uri uri = data.getData();
         new Thread(() -> {
             String result;
             try {
                 File root = getExternalFilesDir(null);
                 if (root == null) throw new IllegalStateException("Astryx storage is unavailable");
-                result = extractBackup(uri, root);
+                if (requestCode == PICK_BACKUP) {
+                    result = extractBackup(uri, root);
+                } else if (requestCode == CREATE_BACKUP) {
+                    result = createBackup(uri, root);
+                } else {
+                    return;
+                }
             } catch (Exception e) {
-                result = "Import failed: " + e.getMessage();
+                result = "Transfer failed: " + e.getMessage();
             }
             final String message = result;
             runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_LONG).show());
-        }, "AstryxBackupImport").start();
+        }, "AstryxDataTransfer").start();
     }
 
     private String extractBackup(Uri uri, File root) throws Exception {
@@ -121,5 +144,46 @@ public class StorageMigrationActivity extends AppCompatActivity {
         }
         if (count == 0) throw new IllegalArgumentException("The selected ZIP is empty or invalid");
         return "Imported " + count + " backup entries. Restart Astryx before launching the imported game data.";
+    }
+
+    private String createBackup(Uri destination, File root) throws Exception {
+        String canonicalRoot = root.getCanonicalPath();
+        long[] total = {0};
+        int[] count = {0};
+        try (java.io.OutputStream raw = getContentResolver().openOutputStream(destination);
+             ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(raw))) {
+            if (raw == null) throw new IllegalStateException("Could not create the backup file");
+            addDirectoryToZip(root, root, canonicalRoot, zip, total, count);
+        }
+        if (count[0] == 0) throw new IllegalStateException("Astryx storage is empty; nothing to back up");
+        return "Exported " + count[0] + " files (" + (total[0] / (1024 * 1024)) + " MB).";
+    }
+
+    private void addDirectoryToZip(File base, File current, String canonicalRoot,
+                                   ZipOutputStream zip, long[] total, int[] count) throws Exception {
+        File[] children = current.listFiles();
+        if (children == null) return;
+        byte[] buffer = new byte[32768];
+        for (File child : children) {
+            String canonical = child.getCanonicalPath();
+            if (!canonical.equals(canonicalRoot) && !canonical.startsWith(canonicalRoot + File.separator)) continue;
+            if (child.isDirectory()) {
+                addDirectoryToZip(base, child, canonicalRoot, zip, total, count);
+            } else if (child.isFile()) {
+                String name = base.toURI().relativize(child.toURI()).getPath();
+                if (name.isEmpty()) continue;
+                zip.putNextEntry(new ZipEntry(name));
+                try (InputStream in = new BufferedInputStream(new java.io.FileInputStream(child))) {
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        total[0] += read;
+                        if (total[0] > MAX_UNPACKED_BYTES) throw new IllegalArgumentException("Backup exceeds 4 GB limit");
+                        zip.write(buffer, 0, read);
+                    }
+                }
+                zip.closeEntry();
+                count[0]++;
+            }
+        }
     }
 }
