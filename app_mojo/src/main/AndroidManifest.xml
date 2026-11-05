@@ -41,6 +41,8 @@
         android:networkSecurityConfig="@xml/netconfig"
         android:enableOnBackInvokedCallback="false"
         tools:ignore="UnusedAttribute">
+        <activity android:name=".CursorStudioActivity" android:exported="false" />
+
         <activity
             android:name=".MissingStorageActivity"
             android:exported="false" />
