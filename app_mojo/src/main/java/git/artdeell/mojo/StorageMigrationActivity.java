@@ -150,9 +150,9 @@ public class StorageMigrationActivity extends AppCompatActivity {
         String canonicalRoot = root.getCanonicalPath();
         long[] total = {0};
         int[] count = {0};
-        try (java.io.OutputStream raw = getContentResolver().openOutputStream(destination);
-             ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(raw))) {
-            if (raw == null) throw new IllegalStateException("Could not create the backup file");
+        java.io.OutputStream raw = getContentResolver().openOutputStream(destination);
+        if (raw == null) throw new IllegalStateException("Could not create the backup file");
+        try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(raw))) {
             addDirectoryToZip(root, root, canonicalRoot, zip, total, count);
         }
         if (count[0] == 0) throw new IllegalStateException("Astryx storage is empty; nothing to back up");
