@@ -25,7 +25,7 @@ def getVersionName = {
     }else {
         def branchName = currentBranch.getName()
         def commitAbbreviation = latestCommit.abbreviatedId
-        return "justicia-${dateToday}-${commitAbbreviation}-${branchName}"
+        return "astryx-${dateToday}-${commitAbbreviation}-${branchName}"
     }
 }
 
@@ -78,7 +78,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "git.artdeell.mjlaunch"
+        applicationId "com.mikey7987.astryxlauncher"
         minSdkVersion 21
         targetSdkVersion 36
         versionCode getDateSeconds()
@@ -108,8 +108,8 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
-            resValue 'string', 'application_package', 'git.artdeell.mjlaunch.debug'
-            resValue 'string', 'storageProviderAuthorities', 'git.artdeell.mjlaunch.scoped.gamefolder.debug'
+            resValue 'string', 'application_package', 'com.mikey7987.astryxlauncher.debug'
+            resValue 'string', 'storageProviderAuthorities', 'com.mikey7987.astryxlauncher.scoped.gamefolder.debug'
         }
         proguard {
             initWith debug
@@ -129,8 +129,8 @@ android {
             // defaultConfig already set
             // multiDexEnabled = true
             // debuggable = true
-            resValue 'string', 'storageProviderAuthorities', 'git.artdeell.mjlaunch.scoped.gamefolder'
-            resValue 'string', 'application_package', 'git.artdeell.mjlaunch'
+            resValue 'string', 'storageProviderAuthorities', 'com.mikey7987.astryxlauncher.scoped.gamefolder'
+            resValue 'string', 'application_package', 'com.mikey7987.astryxlauncher'
         }
         gplay {
             initWith release
