@@ -100,6 +100,25 @@ public class CursorStudioActivity extends AppCompatActivity {
         setContentView(root);
     }
 
+    private void addHotspotSlider(LinearLayout root, String label, String key, int initial) {
+        TextView value = new TextView(this);
+        value.setText(label + ": " + initial + "%");
+        root.addView(value);
+        SeekBar bar = new SeekBar(this);
+        bar.setMax(100);
+        bar.setProgress(Math.max(0, Math.min(100, initial)));
+        root.addView(bar);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                value.setText(label + ": " + progress + "%");
+                if (fromUser) PreferenceManager.getDefaultSharedPreferences(CursorStudioActivity.this)
+                        .edit().putInt(key, progress).apply();
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
