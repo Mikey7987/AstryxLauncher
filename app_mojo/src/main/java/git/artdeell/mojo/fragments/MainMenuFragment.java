@@ -20,6 +20,8 @@ import com.kdt.mcgui.ProgressLayout;
 import com.kdt.mcgui.mcVersionSpinner;
 
 import git.artdeell.mojo.CustomControlsActivity;
+import git.artdeell.mojo.CursorStudioActivity;
+import git.artdeell.mojo.prefs.screens.LauncherPreferenceFragment;
 import git.artdeell.mojo.R;
 
 import git.artdeell.mojo.Tools;
@@ -54,6 +56,8 @@ public class MainMenuFragment extends Fragment {
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
         Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_files_button);
+        Button cursorStudioButton = view.findViewById(R.id.cursor_studio_button);
+        Button performanceButton = view.findViewById(R.id.performance_button);
 
         ImageButton mEditProfileButton = view.findViewById(R.id.edit_profile_button);
         Button mPlayButton = view.findViewById(R.id.play_button);
@@ -70,6 +74,8 @@ public class MainMenuFragment extends Fragment {
         mShareLogsButton.setOnClickListener((v) -> shareLog(requireContext()));
 
         mOpenDirectoryButton.setOnClickListener((v)-> openGameDirectory(v.getContext()));
+        cursorStudioButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CursorStudioActivity.class)));
+        performanceButton.setOnClickListener(v -> Tools.swapFragment(requireActivity(), LauncherPreferenceFragment.class, "ASTRYX_PERFORMANCE", null));
 
 
         mNewsButton.setOnLongClickListener((v)->{
