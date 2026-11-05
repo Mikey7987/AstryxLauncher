@@ -76,12 +76,28 @@
 				app:layout_constraintTop_toBottomOf="@id/install_jar_button" />
 
 			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/cursor_studio_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_mouse"
+				android:text="@string/astryx_cursor_studio"
+				app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/performance_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_sliders"
+				android:text="@string/astryx_performance"
+				app:layout_constraintTop_toBottomOf="@id/cursor_studio_button" />
+
+			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/open_files_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="match_parent"
 				android:drawableStart="@drawable/ic_px_folder"
 				android:text="@string/mcl_button_open_directory"
-				app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+				app:layout_constraintTop_toBottomOf="@id/performance_button" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
 
