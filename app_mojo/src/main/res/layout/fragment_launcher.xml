@@ -79,7 +79,7 @@
 				android:id="@+id/cursor_studio_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="match_parent"
-				android:drawableStart="@drawable/ic_px_mouse"
+				android:drawableStart="@drawable/ic_px_edit"
 				android:text="@string/astryx_cursor_studio"
 				app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
 
