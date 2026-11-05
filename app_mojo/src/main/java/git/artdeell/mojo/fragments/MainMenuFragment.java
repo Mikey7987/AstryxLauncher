@@ -21,6 +21,7 @@ import com.kdt.mcgui.mcVersionSpinner;
 
 import git.artdeell.mojo.CustomControlsActivity;
 import git.artdeell.mojo.CursorStudioActivity;
+import git.artdeell.mojo.PerformancePresetActivity;
 import git.artdeell.mojo.StorageMigrationActivity;
 import git.artdeell.mojo.prefs.screens.LauncherPreferenceFragment;
 import git.artdeell.mojo.R;
@@ -77,7 +78,7 @@ public class MainMenuFragment extends Fragment {
 
         mOpenDirectoryButton.setOnClickListener((v)-> openGameDirectory(v.getContext()));
         cursorStudioButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CursorStudioActivity.class)));
-        performanceButton.setOnClickListener(v -> Tools.swapFragment(requireActivity(), LauncherPreferenceFragment.class, "ASTRYX_PERFORMANCE", null));
+        performanceButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), PerformancePresetActivity.class)));
         migrationButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), StorageMigrationActivity.class)));
 
 
