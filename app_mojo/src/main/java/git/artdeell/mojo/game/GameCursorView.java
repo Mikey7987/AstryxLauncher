@@ -77,17 +77,15 @@ public class GameCursorView extends View implements PlatformCursorImplementor {
         canvas.translate(dx, dy);
         PlatformCursor cursor = Platform.getCursor();
         canvas.scale(mouseScale, mouseScale);
-        if (cursor == null) {
-            if (importedCursor != null) {
-                canvas.drawBitmap(importedCursor,
-                        -importedCursor.getWidth() * importedHotX,
-                        -importedCursor.getHeight() * importedHotY,
-                        customCursorPaint);
-            } else if (cursorDrawable != null) {
-                cursorDrawable.draw(canvas);
-            }
-        } else {
+        if (importedCursor != null) {
+            canvas.drawBitmap(importedCursor,
+                    -importedCursor.getWidth() * importedHotX,
+                    -importedCursor.getHeight() * importedHotY,
+                    customCursorPaint);
+        } else if (cursor != null) {
             canvas.drawBitmap(cursor.bitmap, -cursor.hotX, -cursor.hotY, customCursorPaint);
+        } else if (cursorDrawable != null) {
+            cursorDrawable.draw(canvas);
         }
     }
 
