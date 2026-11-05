@@ -4,6 +4,7 @@
     <string name="app_short_name">AstryxLauncher</string>
 
     <string name="astryx_cursor_studio">Cursor Studio</string>
+    <string name="astryx_migration">Import Mojo backup</string>
     <string name="astryx_performance">Performance Centre</string>
     <string name="astryx_cursor_scale">Cursor size</string>
     <string name="astryx_cursor_import">Import cursor PNG</string>
