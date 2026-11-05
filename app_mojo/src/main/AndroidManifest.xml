@@ -42,6 +42,7 @@
         android:enableOnBackInvokedCallback="false"
         tools:ignore="UnusedAttribute">
         <activity android:name=".CursorStudioActivity" android:exported="false" />
+        <activity android:name=".StorageMigrationActivity" android:exported="false" />
 
         <activity
             android:name=".MissingStorageActivity"
